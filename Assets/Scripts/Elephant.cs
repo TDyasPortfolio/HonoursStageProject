@@ -16,7 +16,7 @@ public class Elephant : Piece
 
     public override string ToString()
     {
-        return "E-" + colour;
+        return "E";
     }
 
     public override List<Vector2Int> GetPossibleSpaces()
@@ -24,7 +24,6 @@ public class Elephant : Piece
         List<Vector2Int> possibleSpaces = new List<Vector2Int>();
         if (boardX - 1 >= 0 && boardY - 1 >= 0)
         {
-            Debug.Log("Checking (" + (boardX - 1) + ", " + (boardY - 1) + ")");
             if (board.board[boardX - 1, boardY - 1] == null)
             {
                 possibleSpaces.Add(new Vector2Int(boardX - 2, boardY - 2));
@@ -32,7 +31,6 @@ public class Elephant : Piece
         }
         if (boardX - 1 >= 0 && boardY + 1 <= 8)
         {
-            Debug.Log("Checking (" + (boardX - 1) + ", " + (boardY + 1) + ")");
             if (board.board[boardX - 1, boardY + 1] == null)
             {
                 possibleSpaces.Add(new Vector2Int(boardX - 2, boardY + 2));
@@ -40,7 +38,6 @@ public class Elephant : Piece
         }
         if (boardX + 1 <= 9 && boardY - 1 >= 0)
         {
-            Debug.Log("Checking (" + (boardX + 1) + ", " + (boardY - 1) + ")");
             if (board.board[boardX + 1, boardY - 1] == null)
             {
                 possibleSpaces.Add(new Vector2Int(boardX + 2, boardY - 2));
@@ -48,7 +45,6 @@ public class Elephant : Piece
         }
         if (boardX + 1 <= 9 && boardY + 1 <= 8)
         {
-            Debug.Log("Checking (" + (boardX + 1) + ", " + (boardY + 1) + ")");
             if (board.board[boardX + 1, boardY + 1] == null)
             {
                 possibleSpaces.Add(new Vector2Int(boardX + 2, boardY + 2));
@@ -67,14 +63,36 @@ public class Elephant : Piece
             {
                 if (move.x >= 5 && move.x <= 9 && move.y >= 0 && move.y <= 8)
                 {
-                    validMoves.Add(move);
+                    if (board.board[move.x, move.y] != null)
+                    {
+                        Piece pieceScript = board.board[move.x, move.y].GetComponent<Piece>();
+                        if (pieceScript.colour != colour)
+                        {
+                            validMoves.Add(move);
+                        }
+                    }
+                    else
+                    {
+                        validMoves.Add(move);
+                    }
                 }
             }
             else
             {
                 if (move.x >= 0 && move.x <= 4 && move.y >= 0 && move.y <= 8)
                 {
-                    validMoves.Add(move);
+                    if (board.board[move.x, move.y] != null)
+                    {
+                        Piece pieceScript = board.board[move.x, move.y].GetComponent<Piece>();
+                        if (pieceScript.colour != colour)
+                        {
+                            validMoves.Add(move);
+                        }
+                    }
+                    else
+                    {
+                        validMoves.Add(move);
+                    }
                 }
             }
         }

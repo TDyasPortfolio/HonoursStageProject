@@ -16,7 +16,7 @@ public class Advisor : Piece
 
     public override string ToString()
     {
-        return "A-" + colour;
+        return "A";
     }
 
     public override List<Vector2Int> GetPossibleSpaces()
@@ -39,14 +39,36 @@ public class Advisor : Piece
             {
                 if (move.x >= 7 && move.x <= 9 && move.y >= 3 && move.y <= 5)
                 {
-                    validMoves.Add(move);
+                    if (board.board[move.x, move.y] != null)
+                    {
+                        Piece pieceScript = board.board[move.x, move.y].GetComponent<Piece>();
+                        if (pieceScript.colour != colour)
+                        {
+                            validMoves.Add(move);
+                        }
+                    }
+                    else
+                    {
+                        validMoves.Add(move);
+                    }
                 }
             }
             else
             {
                 if (move.x >= 0 && move.x <= 2 && move.y >= 3 && move.y <= 5)
                 {
-                    validMoves.Add(move);
+                    if (board.board[move.x, move.y] != null)
+                    {
+                        Piece pieceScript = board.board[move.x, move.y].GetComponent<Piece>();
+                        if (pieceScript.colour != colour)
+                        {
+                            validMoves.Add(move);
+                        }
+                    }
+                    else
+                    {
+                        validMoves.Add(move);
+                    }
                 }
             }
         }

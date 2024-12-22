@@ -16,7 +16,7 @@ public class Cannon : Piece
 
     public override string ToString()
     {
-        return "C-" + colour;
+        return "C";
     }
 
     public override List<Vector2Int> GetPossibleSpaces()
@@ -29,14 +29,24 @@ public class Cannon : Piece
             {
                 if (board.board[boardX - i, boardY] == null)
                 {
-                    possibleSpaces.Add(new Vector2Int(boardX - i, boardY));
+                    if (!pieceJump)
+                    {
+                        possibleSpaces.Add(new Vector2Int(boardX - i, boardY));
+                    }
                 }
                 else
                 {
                     if (pieceJump)
                     {
-                        possibleSpaces.Add(new Vector2Int(boardX - i, boardY));
-                        break;
+                        if (board.board[boardX - i, boardY].GetComponent<Piece>().colour != colour)
+                        {
+                            possibleSpaces.Add(new Vector2Int(boardX - i, boardY));
+                            break;
+                        }
+                        else
+                        {
+                            break;
+                        }
                     }
                     else
                     {
@@ -53,14 +63,24 @@ public class Cannon : Piece
             {
                 if (board.board[boardX + i, boardY] == null)
                 {
-                    possibleSpaces.Add(new Vector2Int(boardX + i, boardY));
+                    if (!pieceJump)
+                    {
+                        possibleSpaces.Add(new Vector2Int(boardX + i, boardY));
+                    }
                 }
                 else
                 {
                     if (pieceJump)
                     {
-                        possibleSpaces.Add(new Vector2Int(boardX + i, boardY));
-                        break;
+                        if (board.board[boardX + i, boardY].GetComponent<Piece>().colour != colour)
+                        {
+                            possibleSpaces.Add(new Vector2Int(boardX + i, boardY));
+                            break;
+                        }
+                        else
+                        {
+                            break;
+                        }
                     }
                     else
                     {
@@ -77,14 +97,24 @@ public class Cannon : Piece
             {
                 if (board.board[boardX, boardY - i] == null)
                 {
-                    possibleSpaces.Add(new Vector2Int(boardX, boardY - i));
+                    if (!pieceJump)
+                    {
+                        possibleSpaces.Add(new Vector2Int(boardX, boardY - i));
+                    }
                 }
                 else
                 {
                     if (pieceJump)
                     {
-                        possibleSpaces.Add(new Vector2Int(boardX, boardY - i));
-                        break;
+                        if (board.board[boardX, boardY - i].GetComponent<Piece>().colour != colour)
+                        {
+                            possibleSpaces.Add(new Vector2Int(boardX, boardY - i));
+                            break;
+                        }
+                        else
+                        {
+                            break;
+                        }
                     }
                     else
                     {
@@ -101,14 +131,24 @@ public class Cannon : Piece
             {
                 if (board.board[boardX, boardY + i] == null)
                 {
-                    possibleSpaces.Add(new Vector2Int(boardX, boardY + i));
+                    if (!pieceJump)
+                    {
+                        possibleSpaces.Add(new Vector2Int(boardX, boardY + i));
+                    }
                 }
                 else
                 {
                     if (pieceJump)
                     {
-                        possibleSpaces.Add(new Vector2Int(boardX, boardY + i));
-                        break;
+                        if (board.board[boardX, boardY + i].GetComponent<Piece>().colour != colour)
+                        {
+                            possibleSpaces.Add(new Vector2Int(boardX, boardY + i));
+                            break;
+                        }
+                        else
+                        {
+                            break;
+                        }
                     }
                     else
                     {
@@ -118,6 +158,7 @@ public class Cannon : Piece
             }
             else { break; }
         }
+        possibleSpaces = FilterImpossibleMoves(possibleSpaces);
         return possibleSpaces;
     }
 
@@ -128,7 +169,18 @@ public class Cannon : Piece
         {
             if (move.x >= 0 && move.x < 10 && move.y >= 0 && move.y < 9)
             {
-                validMoves.Add(move);
+                if (board.board[move.x, move.y] != null)
+                {
+                    Piece pieceScript = board.board[move.x, move.y].GetComponent<Piece>();
+                    if (pieceScript.colour != colour)
+                    {
+                        validMoves.Add(move);
+                    }
+                }
+                else
+                {
+                    validMoves.Add(move);
+                }
             }
         }
         return validMoves;

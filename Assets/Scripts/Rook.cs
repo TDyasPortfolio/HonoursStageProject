@@ -16,7 +16,7 @@ public class Rook : Piece
 
     public override string ToString()
     {
-        return "R-" + colour;
+        return "R";
     }
 
     public override List<Vector2Int> GetPossibleSpaces()
@@ -64,7 +64,7 @@ public class Rook : Piece
                 }
                 else
                 {
-                    possibleSpaces.Add(new Vector2Int(boardX, boardY - 1));
+                    possibleSpaces.Add(new Vector2Int(boardX, boardY - i));
                     break;
                 }
             }
@@ -86,6 +86,7 @@ public class Rook : Piece
             }
             else { break; }
         }
+        possibleSpaces = FilterImpossibleMoves(possibleSpaces);
         return possibleSpaces;
     }
 
@@ -96,7 +97,18 @@ public class Rook : Piece
         {
             if (move.x >= 0 && move.x < 10 && move.y >= 0 && move.y < 9)
             {
-                validMoves.Add(move);
+                if (board.board[move.x, move.y] != null) 
+                {
+                    Piece pieceScript = board.board[move.x, move.y].GetComponent<Piece>();
+                    if (pieceScript.colour != colour)
+                    {
+                        validMoves.Add(move);
+                    }
+                }
+                else
+                {
+                    validMoves.Add(move);
+                }
             }
         }
         return validMoves;

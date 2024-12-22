@@ -16,7 +16,7 @@ public class Knight : Piece
 
     public override string ToString()
     {
-        return "K-" + colour;
+        return "K";
     }
 
     public override List<Vector2Int> GetPossibleSpaces()
@@ -65,7 +65,18 @@ public class Knight : Piece
         {
             if (move.x >= 0 && move.x < 10 && move.y >= 0 && move.y < 9)
             {
-                validMoves.Add(move);
+                if (board.board[move.x, move.y] != null)
+                {
+                    Piece pieceScript = board.board[move.x, move.y].GetComponent<Piece>();
+                    if (pieceScript.colour != colour)
+                    {
+                        validMoves.Add(move);
+                    }
+                }
+                else
+                {
+                    validMoves.Add(move);
+                }
             }
         }
         return validMoves;

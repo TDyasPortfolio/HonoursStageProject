@@ -199,7 +199,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!81 &539801738
 AudioListener:
   m_ObjectHideFlags: 0
@@ -542,7 +542,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1247891392}
-  - component: {fileID: 1247891391}
   m_Layer: 0
   m_Name: gameController
   m_TagString: Untagged
@@ -550,18 +549,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &1247891391
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1247891390}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: daf5a9fadc9e86b4cb6b526096cac0ba, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!4 &1247891392
 Transform:
   m_ObjectHideFlags: 0
@@ -614,6 +601,9 @@ MonoBehaviour:
   redRook: {fileID: 427685018294699086, guid: d5d25e7001c6e284a96dbb281485b289, type: 3}
   redCannon: {fileID: 5688040169382790963, guid: e72de2289a8336042998dc4739898d8f, type: 3}
   redSoldier: {fileID: 6928608688552210828, guid: 1bb23627ea514d447b73d1b0eeeac459, type: 3}
+  redPlaying: 1
+  camR: {fileID: 652711168}
+  camB: {fileID: 539801737}
 --- !u!1001 &662054484042453982
 PrefabInstance:
   m_ObjectHideFlags: 0

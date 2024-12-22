@@ -16,7 +16,7 @@ public class General : Piece
 
     public override string ToString()
     {
-        return "G-" + colour;
+        return "G";
     }
 
     public override List<Vector2Int> GetPossibleSpaces()
@@ -39,17 +39,84 @@ public class General : Piece
             {
                 if (move.x >= 7 && move.x <= 9 && move.y >= 3 && move.y <= 5)
                 {
-                    validMoves.Add(move);
+                    if (board.board[move.x, move.y] != null)
+                    {
+                        Piece pieceScript = board.board[move.x, move.y].GetComponent<Piece>();
+                        if (pieceScript.colour != colour)
+                        {
+                            validMoves.Add(move);
+                        }
+                    }
+                    else
+                    {
+                        validMoves.Add(move);
+                    }
+                }
+                for (int i = 1; i <= 9; i++)
+                {
+                    if (boardX - i >= 0)
+                    {
+                        if (board.board[boardX - i, boardY] == null)
+                        {
+                            continue;
+                        }
+                        else
+                        {
+                            if (board.board[boardX - i, boardY].GetComponent<Piece>().ToString() != "G")
+                            {
+                                break;
+                            }
+                            else
+                            {
+                                validMoves.Add(new Vector2Int(boardX - i, boardY));
+                            }
+                        }
+                    }
+                    else { break; }
                 }
             }
             else
             {
                 if (move.x >= 0 && move.x <= 2 && move.y >= 3 && move.y <= 5)
                 {
-                    validMoves.Add(move);
+                    if (board.board[move.x, move.y] != null)
+                    {
+                        Piece pieceScript = board.board[move.x, move.y].GetComponent<Piece>();
+                        if (pieceScript.colour != colour)
+                        {
+                            validMoves.Add(move);
+                        }
+                    }
+                    else
+                    {
+                        validMoves.Add(move);
+                    }
+                }
+                for (int i = 1; i <= 9; i++)
+                {
+                    if (boardX + i <= 9)
+                    {
+                        if (board.board[boardX + i, boardY] == null)
+                        {
+                            continue;
+                        }
+                        else
+                        {
+                            if (board.board[boardX + i, boardY].GetComponent<Piece>().ToString() != "G")
+                            {
+                                break;
+                            }
+                            else
+                            {
+                                validMoves.Add(new Vector2Int(boardX + i, boardY));
+                            }
+                        }
+                    }
+                    else { break; }
                 }
             }
         }
+
         return validMoves;
     }
 }

@@ -20,6 +20,10 @@ public class Board : MonoBehaviour
     public GameObject redRook;
     public GameObject redCannon;
     public GameObject redSoldier;
+    public bool redPlaying = true;
+    public GameObject camR;
+    public GameObject camB;
+    public int turnCount = 0;
 
     void Start()
     {
@@ -28,6 +32,7 @@ public class Board : MonoBehaviour
     
     void InitializeBoard()
     {
+        
         PlacePiece(blackGeneral, 0, 4, "black");
         PlacePiece(blackAdvisor, 0, 3, "black");
         PlacePiece(blackAdvisor, 0, 5, "black");
@@ -60,7 +65,7 @@ public class Board : MonoBehaviour
         PlacePiece(redSoldier, 6, 4, "red");
         PlacePiece(redSoldier, 6, 6, "red");
         PlacePiece(redSoldier, 6, 8, "red");
-        Debug.Log(GetBoardAsString());
+        SetActivity(redPlaying);
     }
 
     void PlacePiece(GameObject prefab, int x, int y, string colour)
@@ -98,7 +103,7 @@ public class Board : MonoBehaviour
                 }
                 else
                 {
-                    BoardState += "...";
+                    BoardState += ".";
                 }
                 if (col < 8) BoardState += " ";
             }
@@ -125,6 +130,7 @@ public class Board : MonoBehaviour
             board[xFrom, yFrom] = null;
         }
         ClearAllPrefabs();
+        ChangeTurn();
     }
 
     public void ClearAllPrefabs()
@@ -140,6 +146,173 @@ public class Board : MonoBehaviour
                 }
             }
         }
+    }
+
+    public void SetActivity(bool redPlaying)
+    {
+        for (int row = 0; row < 10; row++)
+        {
+            for (int col = 0; col < 9; col++)
+            {
+                if (board[row, col] != null)
+                {
+                    Piece pieceScript = board[row, col].GetComponent<Piece>();
+                    if (pieceScript.colour == "R")
+                    {
+                        pieceScript.active = redPlaying;
+                    }
+                    else
+                    {
+                        pieceScript.active = !redPlaying;
+                    }
+                }
+            }
+        }
+    }
+
+    public void ChangeTurn()
+    {
+        // redPlaying = !redPlaying;
+        // bool inCheck = getCheck(redPlaying);
+        // if (inCheck)
+        // {
+        //     bool inCheckMate = getCheckMate(redPlaying);
+        //     if (inCheckMate)
+        //     {
+        //         GameWin(!redPlaying);
+        //     }
+        //     else
+        //     {
+        //         bool inStaleMate = getStaleMate(redPlaying);
+        //         if (inStaleMate)
+        //         {
+        //             GameWin(!redPlaying); 
+        //         }
+        //         else
+        //         {
+        //             SetActivity(redPlaying, true);
+        //         }
+        //     }
+        // else
+        // {
+        //     SetActivity(redPlaying, false)
+        // }
+        // ChangeCamera();
+
+        redPlaying = !redPlaying;
+        if (redPlaying) { turnCount++; }
+        bool inCheck = getCheck(redPlaying);
+        if (inCheck)
+        {
+            Debug.Log("Check detected on turn " + turnCount + "!");
+            bool inCheckMate = getCheckMate(redPlaying);
+            if (inCheckMate)
+            {
+                Debug.Log("Game over!");
+                if (redPlaying)
+                {
+                    Debug.Log("Black wins!");
+                }
+                else
+                {
+                    Debug.Log("Red wins!");
+                }
+            }
+            SetActivity(redPlaying);
+        }
+        else
+        {
+            SetActivity(redPlaying);
+        }
+        //ChangeCamera();
+    }
+
+    public void ChangeCamera()
+    {
+        if (redPlaying) { camR.SetActive(true); camB.SetActive(false); }
+        else { camR.SetActive(false); camB.SetActive(true); }
+    }
+
+    public bool SpaceSafe(Vector2Int checkSpace, bool redPlaying)
+    {
+        List<GameObject> checkPieces = new List<GameObject>();
+        for (int row = 0; row < 10; row++)
+        {
+            for (int col = 0; col < 9; col++)
+            {
+                if (board[row, col] != null)
+                {
+                    Piece pieceScript = board[row, col].GetComponent<Piece>();
+                    if ((pieceScript.colour == "R" && !redPlaying) || (pieceScript.colour == "B" && redPlaying))
+                    {
+                        checkPieces.Add(board[row, col]);
+                    }
+                }
+            }
+        }
+        bool spaceSafe = true;
+        foreach (GameObject checkPiece in checkPieces)
+        {
+            Piece pieceScript = checkPiece.GetComponent<Piece>();
+            List<Vector2Int> pieceSpaces = pieceScript.GetPossibleSpaces();
+            if (pieceSpaces.Contains(checkSpace))
+            {
+                spaceSafe = false;
+                break;
+            }
+        }
+        return spaceSafe;
+    }
+
+    public bool getCheck(bool redPlaying)
+    {
+        for (int row = 0; row < 10; row++)
+        {
+            for (int col = 0; col < 9; col++)
+            {
+                if (board[row, col] != null)
+                {
+                    Piece pieceScript = board[row, col].GetComponent<Piece>();
+                    if (pieceScript.ToString() == "G")
+                    {
+                        if ((pieceScript.colour == "R" && redPlaying) || (pieceScript.colour == "B" && !redPlaying))
+                        {
+                            return !SpaceSafe(new Vector2Int(pieceScript.boardX, pieceScript.boardY), redPlaying);
+                        }
+                    }
+                }
+            }
+        }
+        return false;
+    }
+
+    public bool getCheckMate(bool redPlaying)
+    {
+        for (int row = 0; row < 10; row++)
+        {
+            for (int col = 0; col < 9; col++)
+            {
+                if (board[row, col] != null)
+                {
+                    Piece pieceScript = board[row, col].GetComponent<Piece>();
+                    if ((pieceScript.colour == "R" && redPlaying) || (pieceScript.colour == "B" && !redPlaying))
+                    {
+                        bool checkMate = true;
+                        List<Vector2Int> allGeneralMoves = pieceScript.GetPossibleSpaces();
+                        foreach (var move in allGeneralMoves)
+                        {
+                            if (SpaceSafe(move, redPlaying))
+                            {
+                                checkMate = false;
+                                break;
+                            }
+                        }
+                        return checkMate;
+                    }
+                }
+            }
+        }
+        return false;
     }
 
     void Update()
