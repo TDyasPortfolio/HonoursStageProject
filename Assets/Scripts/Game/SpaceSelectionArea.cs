@@ -17,6 +17,13 @@ public class SpaceSelectionArea : MonoBehaviour
     
     void OnMouseDown()
     {
-        board.MovePiece(sourceX, sourceY, boardX, boardY);
+        if (board.GameIsOffline())
+        {
+            board.MovePiece(sourceX, sourceY, boardX, boardY);
+        }
+        else
+        {
+            board.AttemptMoveServerRPC(sourceX, sourceY, boardX, boardY);
+        }
     }
 }
