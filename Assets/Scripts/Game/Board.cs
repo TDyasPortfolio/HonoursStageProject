@@ -378,7 +378,7 @@ public class Board : NetworkBehaviour
 
     public bool GameIsOffline()
     {
-        return NetworkManager.Singleton == null;
+        return !NetworkManager.Singleton.IsListening;
     }
 
     public bool PlayerCanMove()
